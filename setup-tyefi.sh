@@ -10,6 +10,12 @@ fi
 #Set path to copy appimage and autolaunch location
 APPIMAGE_PATH="$TYEFI_ROOT/bin/carplay.appimage"
 
+if [[ -f "$APPIMAGE_PATH" ]]; then
+	echo "carplay AppImage found at $APPIMAGE_PATH, skipping install"
+else
+	echo "carplay AppImage not found at $APPIMAGE_PATH, installing"
+fi
+
 #create udev rule thats specific to carlinkit device
 echo "Creating udev rules"
 
@@ -39,32 +45,26 @@ if [ "" = "$PKG_OK" ]; then
   sudo apt-get --yes install $REQUIRED_PKG
 fi
 
+echo "Downloading AppImage to $APPIMAGE_PATH"
 
-
-if [[ ! -f "$APPIMAGE_PATH" ]]; then
-	echo "Downloading AppImage to $APPIMAGE_PATH"
-
-	if getconf LONG_BIT | grep -q '64'; then
-		echo "64 Bit Detected"
-		curl -L https://github.com/rhysmorgan134/react-carplay/releases/download/v4.0.5/react-carplay-4.0.5-arm64.AppImage --output $APPIMAGE_PATH
-	else
-		echo "32 Bit OS not supported"
-		exit 1
-	fi
-
-	echo "Download Done"
-
-	echo "Creating executable"
-	sudo chmod +x $APPIMAGE_PATH
-
-	# echo "Creating Autostart File"
-
-	# # sudo bash -c "echo '[Desktop Entry]
-	# # Name=File Manager
-	# # Exec=/home/$USER/Desktop/Carplay.AppImage
-	# # Type=Application' > /etc/xdg/autostart/carplay.desktop"
-
-	echo "All Done"
+if getconf LONG_BIT | grep -q '64'; then
+	echo "64 Bit Detected"
+	curl -L https://github.com/rhysmorgan134/react-carplay/releases/download/v4.0.5/react-carplay-4.0.5-arm64.AppImage --output $APPIMAGE_PATH
 else
-	echo "AppImage already exists at $APPIMAGE_PATH"
+	echo "32 Bit OS not supported"
+	exit 1
 fi
+
+echo "Download Done"
+
+echo "Creating executable"
+sudo chmod +x $APPIMAGE_PATH
+
+# echo "Creating Autostart File"
+
+# # sudo bash -c "echo '[Desktop Entry]
+# # Name=File Manager
+# # Exec=/home/$USER/Desktop/Carplay.AppImage
+# # Type=Application' > /etc/xdg/autostart/carplay.desktop"
+
+echo "All Done"
