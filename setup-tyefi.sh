@@ -12,7 +12,6 @@ APPIMAGE_PATH="$TYEFI_ROOT/bin/carplay.appimage"
 
 if [[ -f "$APPIMAGE_PATH" ]]; then
 	echo "carplay AppImage found at $APPIMAGE_PATH, skipping install"
-	exit 0
 else
 	echo "carplay AppImage not found at $APPIMAGE_PATH, installing"
 
