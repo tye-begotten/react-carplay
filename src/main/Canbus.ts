@@ -12,7 +12,7 @@ type CanMask = {
 
 
 export class Canbus extends EventEmitter {
-  channel: can.channel
+  channel
   canChannel: string
   subscriptions: CanConfig
   masks: CanMask[]

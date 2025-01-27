@@ -9,6 +9,7 @@ export type ExtraConfig = DongleConfig & {
   kiosk: boolean,
   camera: string,
   microphone: string,
+  audioOutput: string,
   piMost: boolean,
   canbus: boolean,
   bindings: KeyBindings,

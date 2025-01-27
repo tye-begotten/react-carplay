@@ -1,7 +1,10 @@
 import { resolve } from 'path'
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
 import react from '@vitejs/plugin-react'
-import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
+// import NodeGlobalsPolyfillPlugin from '@esbuild-plugins/node-globals-polyfill'
+import NodeGlobalsPolyfillPlugin from 'rollup-plugin-polyfill-node'
+// import {nodePolyfills} from 'vite-plugin-node-polyfills'
+
 
 export default defineConfig({
   main: {

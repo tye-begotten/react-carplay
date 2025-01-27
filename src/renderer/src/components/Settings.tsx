@@ -44,10 +44,13 @@ function Settings({ settings }: SettingsProps) {
   const [activeSettings, setActiveSettings] = useState<ExtraConfig>(settings)
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([])
   const [microphones, setMicrophones] = useState<MediaDeviceInfo[]>([])
+  const [audioOutputs, setAudioOutputs] = useState<MediaDeviceInfo[]>([])
   const [openStream, setOpenStream] = useState<boolean>(false)
   const [openBindings, setOpenBindings] = useState<boolean>(false)
   const [openCan, setOpenCan] = useState<boolean>(false)
   const saveSettings = useCarplayStore(state => state.saveSettings)
+
+  
 
   const settingsChange = (key, value) => {
     console.log("changing settings to ", {
@@ -174,7 +177,6 @@ function Settings({ settings }: SettingsProps) {
       </Grid>
     )
   }
-
   const renderMicrophones = () => {
     return  (
       <Grid xs={6}>
@@ -197,6 +199,28 @@ function Settings({ settings }: SettingsProps) {
       </Grid>
     )
   }
+  const renderAudioOutputs = () => {
+    return  (
+      <Grid key={'audioOutputs'} xs={6}>
+        <FormControl fullWidth>
+          <InputLabel id={'audioOutputSelectLabel'}>AUDIO OUTPUT</InputLabel>
+          <Select
+            labelId={"audioOutputSelectLabel"}
+            id={"audioOutputSelect"}
+            value={activeSettings.camera}
+            autoWidth
+            onChange={(event: SelectChangeEvent) => {
+              settingsChange('audioOutput', event.target.value)
+            }}
+          >
+            {audioOutputs.map((audioOutput) => {
+              return <MenuItem selected={audioOutput.deviceId == activeSettings.audioOutput} key={audioOutput.deviceId} value={audioOutput.deviceId}>{audioOutput.label}</MenuItem>
+            })}
+          </Select>
+        </FormControl>
+      </Grid>
+    )
+  }
 
   useEffect(() => {
     if(!navigator.mediaDevices?.enumerateDevices) {
@@ -213,14 +237,18 @@ function Settings({ settings }: SettingsProps) {
               microphones.push(device)
             } else if (device.kind === "videoinput") {
               webcams.push(device)
+            } else if (device.kind === "audiooutput") {
+              audioOutputs.push(device)
             }
           })
-          console.log(webcams, microphones)
+          console.log(webcams, microphones, audioOutputs)
           setCameras(webcams)
           setMicrophones(microphones)
+          setAudioOutputs(audioOutputs)
         })
     }
   }, []);
+
   const renderSettings = () => {
     return (
       <Grid container spacing={2}>
@@ -230,6 +258,7 @@ function Settings({ settings }: SettingsProps) {
         <Grid xs={12} container>
           {cameras.length > 0 ? renderCameras() : null}
           {microphones.length > 0 ? renderMicrophones() : null}
+          {audioOutputs.length > 0 ? renderAudioOutputs() : null}
         </Grid>
         <Grid xs={12} >
           <Box>

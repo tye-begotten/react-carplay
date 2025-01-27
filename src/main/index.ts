@@ -35,6 +35,7 @@ const EXTRA_CONFIG: ExtraConfig = {
   kiosk: true,
   camera: '',
   microphone: '',
+  audioOutput: '',
   piMost: false,
   canbus: false,
   bindings: DEFAULT_BINDINGS,
@@ -46,6 +47,11 @@ const EXTRA_CONFIG: ExtraConfig = {
 let canbus: null | Canbus
 
 let socket: null | Socket
+
+function __saveSettings(settings: ExtraConfig) {
+  console.log("saving settings", settings)
+  ipcMain.emit('saveSettings', settings)
+}
 
 fs.exists(configPath, (exists) => {
     if(exists) {
@@ -64,7 +70,7 @@ fs.exists(configPath, (exists) => {
       config = JSON.parse(fs.readFileSync(configPath).toString())
       console.log("config created and read")
     }
-    socket = new Socket(config!, saveSettings)
+    socket = new Socket(config!, __saveSettings)
     // comment below if statement to allow running on non linux devices
     if(config!.canbus) {
       console.log("Configuring can", config!.canConfig)
@@ -220,7 +226,7 @@ app.whenReady().then(() => {
   })
 })
 
-const saveSettings = (settings: ExtraConfig) => {
+const saveSettings = (_: IpcMainEvent, settings: ExtraConfig) => {
   console.log("saving settings", settings)
   fs.writeFileSync(configPath, JSON.stringify(settings))
   app.relaunch()
