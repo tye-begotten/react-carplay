@@ -8,14 +8,19 @@ import {
 import { PcmPlayer } from 'pcm-ringbuf-player'
 import { AudioPlayerKey, CarPlayWorker } from './worker/types'
 import { createAudioPlayerKey } from './worker/utils'
+// import { ExtraConfig } from 'src/main/Globals'
+// import { useCarplayStore, useStatusStore } from "./store/store";
+
 
 //TODO: allow to configure
-const defaultAudioVolume = 1
-const defaultNavVolume = 0.5
+const defaultAudioVolume = .6
+const defaultNavVolume = 0.3
+// const [activeSettings, setActiveSettings] = useState<ExtraConfig>(settings)
 
 const useCarplayAudio = (
   worker: CarPlayWorker,
   microphonePort: MessagePort,
+  // settings: ExtraConfig,
 ) => {
   const [mic, setMic] = useState<WebMicrophone | null>(null)
   const [audioPlayers] = useState(new Map<AudioPlayerKey, PcmPlayer>())

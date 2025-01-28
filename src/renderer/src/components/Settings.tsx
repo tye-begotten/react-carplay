@@ -207,7 +207,7 @@ function Settings({ settings }: SettingsProps) {
           <Select
             labelId={"audioOutputSelectLabel"}
             id={"audioOutputSelect"}
-            value={activeSettings.camera}
+            value={activeSettings.audioOutput}
             autoWidth
             onChange={(event: SelectChangeEvent) => {
               settingsChange('audioOutput', event.target.value)
@@ -226,6 +226,7 @@ function Settings({ settings }: SettingsProps) {
     if(!navigator.mediaDevices?.enumerateDevices) {
       setMicrophones([])
       setCameras([])
+      setAudioOutputs([])
     } else {
       navigator.mediaDevices
         .enumerateDevices()
