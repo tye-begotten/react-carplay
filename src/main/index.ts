@@ -36,6 +36,8 @@ const EXTRA_CONFIG: ExtraConfig = {
   camera: '',
   microphone: '',
   audioOutput: '',
+  volume: 0.5,
+  isMuted: false,
   piMost: false,
   canbus: false,
   bindings: DEFAULT_BINDINGS,
@@ -47,6 +49,7 @@ const EXTRA_CONFIG: ExtraConfig = {
 let canbus: null | Canbus
 
 let socket: null | Socket
+
 
 function __saveSettings(settings: ExtraConfig) {
   console.log("saving settings", settings)
@@ -166,7 +169,11 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
   app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-  systemPreferences.askForMediaAccess("microphone")
+  if (systemPreferences?.askForMediaAccess) {
+    systemPreferences.askForMediaAccess("microphone")
+  } else {
+    console.log("systemPreferences.askForMediaAccess does not exist on this platform")
+  }
   mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
     details.responseHeaders!['Cross-Origin-Opener-Policy'] = ['same-origin'];
     details.responseHeaders!['Cross-Origin-Embedder-Policy'] = ['require-corp'];

@@ -8,7 +8,7 @@ import {
 import { PcmPlayer } from 'pcm-ringbuf-player'
 import { AudioPlayerKey, CarPlayWorker } from './worker/types'
 import { createAudioPlayerKey } from './worker/utils'
-// import { ExtraConfig } from 'src/main/Globals'
+import { ExtraConfig } from 'src/main/Globals'
 // import { useCarplayStore, useStatusStore } from "./store/store";
 
 
@@ -20,10 +20,11 @@ const defaultNavVolume = 0.3
 const useCarplayAudio = (
   worker: CarPlayWorker,
   microphonePort: MessagePort,
-  // settings: ExtraConfig,
+  settings: ExtraConfig,
 ) => {
   const [mic, setMic] = useState<WebMicrophone | null>(null)
   const [audioPlayers] = useState(new Map<AudioPlayerKey, PcmPlayer>())
+  // const [settings] = useState<ExtraConfig>()
 
   const getAudioPlayer = useCallback(
     (audio: AudioData): PcmPlayer => {
@@ -34,7 +35,7 @@ const useCarplayAudio = (
       if (player) return player
       player = new PcmPlayer(format.frequency, format.channel)
       audioPlayers.set(audioKey, player)
-      player.volume(defaultAudioVolume)
+      player.volume(settings.volume)
       player.start()
       worker.postMessage({
         type: 'audioPlayer',
@@ -72,6 +73,21 @@ const useCarplayAudio = (
     [getAudioPlayer],
   )
 
+  const changeVolume = useCallback(
+    (volume: number) => {
+      audioPlayers.forEach(p => p.volume(volume))
+    },
+    [audioPlayers],
+  )
+
+  const play = useCallback(() => {
+    audioPlayers.forEach(p => p.start())
+  }, [audioPlayers])
+
+  const stop = useCallback(() => {
+    audioPlayers.forEach(p => p.stop())
+  }, [audioPlayers])
+
   // audio init
   useEffect(() => {
     const initMic = async () => {
@@ -101,7 +117,7 @@ const useCarplayAudio = (
     mic?.stop()
   }, [mic])
 
-  return { processAudio, getAudioPlayer, startRecording, stopRecording }
+  return { processAudio, getAudioPlayer, startRecording, stopRecording, changeVolume, play, stop }
 }
 
 export default useCarplayAudio

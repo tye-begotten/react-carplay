@@ -214,7 +214,7 @@ function Settings({ settings }: SettingsProps) {
             }}
           >
             {audioOutputs.map((audioOutput) => {
-              return <MenuItem selected={audioOutput.deviceId == activeSettings.audioOutput} key={audioOutput.deviceId} value={audioOutput.deviceId}>{audioOutput.label}</MenuItem>
+              return <MenuItem key={audioOutput.deviceId} value={audioOutput.deviceId}>{audioOutput.label}</MenuItem>
             })}
           </Select>
         </FormControl>

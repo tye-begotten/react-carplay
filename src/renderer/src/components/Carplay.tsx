@@ -14,6 +14,7 @@ import { ExtraConfig} from "../../../main/Globals";
 import { useCarplayStore, useStatusStore } from "../store/store";
 import { InitEvent } from './worker/render/RenderEvents'
 import { Typography } from "@mui/material";
+import { Tyefi, TyefiMessageNames } from './Tyefi'
 
 const width = window.innerWidth
 const height = window.innerHeight
@@ -53,7 +54,25 @@ function Carplay({ receivingVideo, setReceivingVideo, settings, command, command
     mediaDelay: settings.mediaDelay
   }
   // const pathname = "/"
-  console.log(pathname)
+  console.log(`pathname=${pathname}`)
+
+  var tyefi = null;
+
+  // try {
+  //   console.log("initializing tyefi socket")
+  //   tyefi = new Tyefi(settings)
+
+  //   tyefi.on(TyefiMessageNames.VolChange, (volume: number) => {
+  //     changeVolume(volume)
+  //   })
+
+  //   tyefi.on(TyefiMessageNames.Stop, () => {
+  //     stop()
+  //   })
+  // } catch (ex) {
+  //   console.log(`ERROR INITIALIZING TYEFI: ${ex}`)
+  //   console.error(ex)
+  // }
 
   const renderWorker = useMemo(() => {
     if (!canvasElement) return
@@ -91,8 +110,8 @@ function Carplay({ receivingVideo, setReceivingVideo, settings, command, command
     return worker
   }, [])
 
-  const { processAudio, getAudioPlayer, startRecording, stopRecording } =
-    useCarplayAudio(carplayWorker, micChannel.port2)
+  const { processAudio, getAudioPlayer, startRecording, stopRecording, changeVolume, play, stop } =
+    useCarplayAudio(carplayWorker, micChannel.port2, settings)
 
   const clearRetryTimeout = useCallback(() => {
     if (retryTimeoutRef.current) {
@@ -100,6 +119,8 @@ function Carplay({ receivingVideo, setReceivingVideo, settings, command, command
       retryTimeoutRef.current = null
     }
   }, [])
+
+
 
   // subscribe to worker messages
   useEffect(() => {
@@ -154,7 +175,8 @@ function Carplay({ receivingVideo, setReceivingVideo, settings, command, command
           break
       }
     }
-  }, [carplayWorker, clearRetryTimeout, getAudioPlayer, processAudio, renderWorker, startRecording, stopRecording])
+  }, [carplayWorker, clearRetryTimeout, getAudioPlayer, processAudio, renderWorker, 
+      startRecording, stopRecording, changeVolume, play, stop])
 
   useEffect(() => {
     const element = mainElem?.current
