@@ -24,14 +24,14 @@ const style = {
   display: "flex"
 };
 
+
+
 function App() {
   const [receivingVideo, setReceivingVideo] = useState(false)
   const [commandCounter, setCommandCounter] = useState(0)
   const [keyCommand, setKeyCommand] = useState('')
   const [reverse, setReverse] = useStatusStore(state => [state.reverse, state.setReverse])
   const settings = useCarplayStore((state) => state.settings)
-
-
 
   useEffect(() => {
     document.addEventListener('keydown', onKeyDown)

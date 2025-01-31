@@ -40,7 +40,7 @@
     "react-loader-spinner": "^5.4.5",
     "react-router-dom": "^6.16.0",
     "socket.io": "^4.7.2",
-    "socket.io-client": "^4.7.2",
+    "socket.io-client": "^4.8.1",
     "socketcan": "^4.0.4",
     "socketmost": "^2.0.6",
     "stream-browserify": "^3.0.0",

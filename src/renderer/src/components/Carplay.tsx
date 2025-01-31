@@ -14,7 +14,6 @@ import { ExtraConfig} from "../../../main/Globals";
 import { useCarplayStore, useStatusStore } from "../store/store";
 import { InitEvent } from './worker/render/RenderEvents'
 import { Typography } from "@mui/material";
-import { Tyefi, TyefiMessageNames } from './Tyefi'
 
 const width = window.innerWidth
 const height = window.innerHeight
@@ -35,6 +34,7 @@ interface CarplayProps {
 }
 
 function Carplay({ receivingVideo, setReceivingVideo, settings, command, commandCounter }: CarplayProps) {
+  console.log("Carplay.tsx is initializing")
   const [isPlugged, setPlugged] = useStatusStore(state => [state.isPlugged, state.setPlugged])
   const [deviceFound, setDeviceFound] = useState(false)
   const navigate = useNavigate()
@@ -55,24 +55,6 @@ function Carplay({ receivingVideo, setReceivingVideo, settings, command, command
   }
   // const pathname = "/"
   console.log(`pathname=${pathname}`)
-
-  var tyefi = null;
-
-  // try {
-  //   console.log("initializing tyefi socket")
-  //   tyefi = new Tyefi(settings)
-
-  //   tyefi.on(TyefiMessageNames.VolChange, (volume: number) => {
-  //     changeVolume(volume)
-  //   })
-
-  //   tyefi.on(TyefiMessageNames.Stop, () => {
-  //     stop()
-  //   })
-  // } catch (ex) {
-  //   console.log(`ERROR INITIALIZING TYEFI: ${ex}`)
-  //   console.error(ex)
-  // }
 
   const renderWorker = useMemo(() => {
     if (!canvasElement) return

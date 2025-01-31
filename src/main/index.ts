@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import { DEFAULT_CONFIG } from 'node-carplay/node'
 import { Socket } from './Socket'
 import * as fs from 'fs';
+import { TyefiClient } from "./TyefiClient"
 
 // comment below line to allow running on non linux devices
 import {Canbus} from "./Canbus"
@@ -262,3 +263,19 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+
+
+
+console.log("CARPLAY: CREATING TYEFI CLIENT")
+
+const tyefi = new TyefiClient();
+
+tyefi.on("volChange", (volume: number) => {
+  console.log(`TyefiMessageNames.VolChange received, volume=${volume}`)
+  // changeVolume(volume)
+})
+
+tyefi.on("stop", () => {
+  console.log(`TyefiMessageNames.Stop received`)
+  // stop()
+})
